@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import AdminPage from "@/components/AdminPage";
 import BuzzerPage from "@/components/BuzzerPage";
 import Footer from "@/components/Login/Footer";

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import ThemeSwitcher from "@/components/Admin/ThemeSwitcher";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { validateGameData } from "@/lib/utils";

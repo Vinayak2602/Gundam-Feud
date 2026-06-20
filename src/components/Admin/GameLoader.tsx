@@ -1,5 +1,6 @@
 import ToolTipIcon from "@/components/ui/tooltip";
 import { ERROR_CODES } from "@/i18n/errorCodes";
+import { normalizeLanguage } from "@/i18n/languages";
 import { handleCsvFile, handleJsonFile, isValidFileType } from "@/lib/utils";
 import { WSEvent } from "@/src/types";
 import { FileUp } from "lucide-react";
@@ -84,7 +85,7 @@ const GameLoader = ({ gameSelector, send, setCsvFileUpload, setCsvFileUploadText
                 send({
                   action: "load_game",
                   file: e.target.value,
-                  lang: i18n.language,
+                  lang: normalizeLanguage(i18n.resolvedLanguage ?? i18n.language),
                 });
               }}
             >

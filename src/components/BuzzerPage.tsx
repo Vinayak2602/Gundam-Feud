@@ -1,7 +1,6 @@
 import TitleLogo from "@/components/TitleLogo";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import FinalPage from "@/components/FinalPage";
 import QuestionBoard from "@/components/QuestionBoard";
 import Round from "@/components/Round";
