@@ -2,18 +2,17 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 declare global {
-   interface Window {
-     __APP_CONFIG__?: {
-       maxBannerTextLength?: number;
-     };
-   }
- }
- const DEFAULT_MAX_BANNER_TEXT_LENGTH = 280;
- const MAX_BANNER_TEXT_LENGTH =
-   typeof window !== "undefined" &&
-   typeof window.__APP_CONFIG__?.maxBannerTextLength === "number"
-     ? window.__APP_CONFIG__.maxBannerTextLength
-     : DEFAULT_MAX_BANNER_TEXT_LENGTH;
+  interface Window {
+    __APP_CONFIG__?: {
+      maxBannerTextLength?: number;
+    };
+  }
+}
+const DEFAULT_MAX_BANNER_TEXT_LENGTH = 280;
+const MAX_BANNER_TEXT_LENGTH =
+  typeof window !== "undefined" && typeof window.__APP_CONFIG__?.maxBannerTextLength === "number"
+    ? window.__APP_CONFIG__.maxBannerTextLength
+    : DEFAULT_MAX_BANNER_TEXT_LENGTH;
 const DESTRUCTIVE_CONFIRM_DELAY_MS = 3_000;
 
 interface AdminPlayerSummary {
@@ -119,8 +118,7 @@ function DestructiveActionButton({
   const [isConfirming, setIsConfirming] = useState(false);
   const [secondsRemaining, setSecondsRemaining] = useState(0);
 
-  const shapeClassName =
-    variant === "compact" ? "rounded-md px-4 py-2 text-base" : "rounded-md p-3 text-left text-lg";
+  const shapeClassName = variant === "compact" ? "rounded-md px-4 py-2 text-base" : "rounded-md p-3 text-left text-lg";
   const sharedClassName = `${shapeClassName} shadow-sm hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60`;
 
   useEffect(() => {

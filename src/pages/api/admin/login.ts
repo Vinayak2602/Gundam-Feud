@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import {
   buildAdminSessionCookie,
   getLoginThrottleState,
@@ -7,15 +6,19 @@ import {
   parsePassword,
   resetLoginThrottle,
 } from "@/lib/server/admin-auth";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const INVALID_LOGIN_ERROR = "Invalid credentials";
 
 function firstHeaderValue(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
 }
 
 function cleanAddress(value: string): string {
-  return value.trim().replace(/^\[|\]$/g, "").replace(/^::ffff:/, "");
+  return value
+    .trim()
+    .replace(/^\[|\]$/g, "")
+    .replace(/^::ffff:/, "");
 }
 
 function isPrivateOrLocalAddress(value: string): boolean {

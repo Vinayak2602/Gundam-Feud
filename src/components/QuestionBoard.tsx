@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
 import FitText from "@/components/FitText";
 import { Round } from "@/types/game";
+import { useTranslation } from "react-i18next";
 
 interface QuestionBoardProps {
   round: Round;
