@@ -7,6 +7,7 @@ import translationFR from "public/locales/fr/translation.json";
 import translationID from "public/locales/id/translation.json";
 import { initReactI18next } from "react-i18next";
 import format from "./i18n-format";
+import { defaultLanguage, supportedLanguages } from "./languages";
 
 const resources = {
   en: {
@@ -33,11 +34,18 @@ i18n
     react: {
       useSuspense: false,
     },
-    fallbackLng: "en",
+    fallbackLng: defaultLanguage,
+    supportedLngs: supportedLanguages,
+    nonExplicitSupportedLngs: true,
+    load: "languageOnly",
+    cleanCode: true,
+    detection: {
+      order: ["localStorage", "navigator", "htmlTag"],
+      caches: ["localStorage"],
+    },
     interpolation: {
       format,
     },
-    supportedLngs: ["es", "en", "id", "et", "fr"],
   });
 
 export default i18n;

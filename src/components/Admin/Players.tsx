@@ -1,8 +1,7 @@
-import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import { Game } from "@/src/types/game";
 import { Eye, EyeOff } from "lucide-react";
 import { Dispatch, RefObject, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PlayerActionButtonsProps {
   player: Player;

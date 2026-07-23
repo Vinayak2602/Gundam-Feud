@@ -1,4 +1,5 @@
 import "../global.css";
+import "@/i18n/i18n";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import ThemeProvider from "@/components/ThemeProvider";
 import ToasterWithTheme from "@/components/ToasterWithTheme";

@@ -1,3 +1,4 @@
+import { languageOptions, normalizeLanguage } from "@/i18n/languages";
 import { Languages } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -8,13 +9,15 @@ interface LanguageSwitcherProps {
 
 export default function LanguageSwitcher({ onChange }: LanguageSwitcherProps) {
   const { i18n, t } = useTranslation();
+  const selectedLanguage = normalizeLanguage(i18n.resolvedLanguage ?? i18n.language);
+
   return (
     <div className="flex items-center gap-4 ">
       <Languages color="gray" />
       <select
         id="languageInput"
         className="w-full rounded-lg bg-secondary-300 p-2 capitalize text-foreground sm:w-fit"
-        value={i18n.language}
+        value={selectedLanguage}
         onChange={
           onChange
             ? onChange
@@ -23,11 +26,11 @@ export default function LanguageSwitcher({ onChange }: LanguageSwitcherProps) {
               }
         }
       >
-        <option value="en">English ({t("english")})</option>
-        <option value="es">Español ({t("spanish")})</option>
-        <option value="id">Indonesian ({t("indonesian")})</option>
-        <option value="et">Estonian ({t("estonian")})</option>
-        <option value="fr">Français ({t("french")})</option>
+        {languageOptions.map((language) => (
+          <option key={language.code} value={language.code}>
+            {language.label} ({t(language.translationKey)})
+          </option>
+        ))}
       </select>
     </div>
   );

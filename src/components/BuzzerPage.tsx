@@ -1,13 +1,10 @@
-import TitleLogo from "@/components/TitleLogo";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import FinalPage from "@/components/FinalPage";
 import QuestionBoard from "@/components/QuestionBoard";
 import Round from "@/components/Round";
 import ScaleToFit from "@/components/ScaleToFit";
 import StrikeOverlay from "@/components/StrikeOverlay";
 import TeamName from "@/components/TeamName";
+import TitleLogo from "@/components/TitleLogo";
 import { ERROR_CODES } from "@/i18n/errorCodes";
 import { getTeamDisplayName } from "@/lib/utils";
 import { Game, WSEvent } from "@/types/game";
@@ -16,6 +13,8 @@ import cookieCutter from "cookie-cutter";
 import { EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 let timerInterval: NodeJS.Timeout | null = null;

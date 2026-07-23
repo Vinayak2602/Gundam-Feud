@@ -1,12 +1,11 @@
+import ThemeSwitcher from "@/components/Admin/ThemeSwitcher";
+import HelpButton from "@/components/HelpButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import TitleLogo from "@/components/TitleLogo";
+import { ERROR_CODES } from "@/i18n/errorCodes";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
-import ThemeSwitcher from "@/components/Admin/ThemeSwitcher";
-import HelpButton from "@/components/HelpButton";
-import { ERROR_CODES } from "@/i18n/errorCodes";
 import { toast } from "sonner";
 import { GameTheme } from "../types";
 

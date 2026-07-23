@@ -7,7 +7,7 @@ ENV CGO_ENABLED=1
 ENV GOCACHE=/.cache/go-build
 ENV GOMODCACHE=/.cache/go-mod
 RUN apk add gcc musl-dev sqlite curl
-RUN go install github.com/air-verse/air@latest
+RUN go install github.com/air-verse/air@v1.67.1
 COPY --from=games . /src/games/
 COPY . .
 RUN mkdir -p /.cache/go-build /.cache/go-mod && \
