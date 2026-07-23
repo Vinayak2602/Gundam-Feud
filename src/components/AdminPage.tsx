@@ -1,12 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import AdminSettings from "@/components/Admin/AdminSettings";
 import CSVLoader from "@/components/Admin/CSVLoader";
 import GameDisplay from "@/components/Admin/GameDisplay";
 import RoomSettings from "@/components/Admin/RoomSettings";
 import TitlesAndLogoSettings from "@/components/Admin/TitlesAndLogoSettings";
 import { ERROR_CODES } from "@/i18n/errorCodes";
+import { normalizeLanguage } from "@/i18n/languages";
 import { Game, WSAction, WSEvent } from "@/types/game";
 import { toast } from "sonner";
 import { GameContext } from "../pages";
@@ -92,7 +92,7 @@ export default function AdminPage({ ws, game, setGame, room, quitGame, playerId 
     }, 1000);
 
     ws.current.addEventListener("message", handleMessage);
-    send({ action: "change_lang", data: i18n.language?.split("-")[0] });
+    send({ action: "change_lang", data: normalizeLanguage(i18n.resolvedLanguage ?? i18n.language) });
     return () => {
       clearInterval(retryInterval);
       ws.current.removeEventListener("message", handleMessage);

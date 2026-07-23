@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import { FinalRound, Game } from "@/types/game";
 
 const TEXT_SHADOW = "2px 2px 0 black";

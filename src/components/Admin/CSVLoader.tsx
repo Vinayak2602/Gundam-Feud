@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import { ERROR_CODES } from "@/i18n/errorCodes";
 import { Answer, FinalRound, FinalRoundAnswer, Game, Round, Settings, WSEvent } from "@/types/game";
 import { TFunction } from "i18next";

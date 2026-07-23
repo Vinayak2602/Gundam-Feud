@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import { useEffect, useState } from "react";
 
 function adjustTextSize(text: string, limit = 8, startingSize = 80) {
