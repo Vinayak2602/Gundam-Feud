@@ -1,11 +1,10 @@
-import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import { ERROR_CODES } from "@/i18n/errorCodes";
 import { Answer, FinalRound, FinalRoundAnswer, Game, Round, Settings, WSEvent } from "@/types/game";
 import { TFunction } from "i18next";
 // @ts-expect-error papaparse is not typed
 import Papa from "papaparse";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CSVRow from "./CSVRow";
 
 export function csvStringToArray(data: string) {

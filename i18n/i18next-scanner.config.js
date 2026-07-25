@@ -1,7 +1,11 @@
+/* global module */
+
 module.exports = {
   input: [
     "./src/components/**/*.jsx",
+    "./src/components/**/*.tsx",
     "./src/pages/**/*.jsx",
+    "./src/pages/**/*.tsx",
     // Use ! to filter out files or directories
     "!locales/**",
     "!**/node_modules/**",

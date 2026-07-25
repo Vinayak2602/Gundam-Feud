@@ -2,6 +2,7 @@ import CreateNewGameButton from "@/components/Admin/CreateNewGameButton";
 import GameLoader from "@/components/Admin/GameLoader";
 import ThemeSwitcher from "@/components/Admin/ThemeSwitcher";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { normalizeLanguage } from "@/i18n/languages";
 import { Game, WSEvent } from "@/src/types";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
@@ -58,8 +59,9 @@ export default function RoomSettings({
         <div className="flex flex-col items-center gap-5 sm:flex-row">
           <LanguageSwitcher
             onChange={(e) => {
-              i18n.changeLanguage(e.target.value);
-              send({ action: "change_lang", data: e.target.value });
+              const language = normalizeLanguage(e.target.value);
+              i18n.changeLanguage(language);
+              send({ action: "change_lang", data: language });
             }}
           />
           <ThemeSwitcher game={game} setGame={setGame} send={send} />

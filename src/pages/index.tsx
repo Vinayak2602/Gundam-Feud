@@ -1,7 +1,3 @@
-import Head from "next/head";
-import { createContext, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 import AdminPage from "@/components/AdminPage";
 import BuzzerPage from "@/components/BuzzerPage";
 import Footer from "@/components/Login/Footer";
@@ -11,6 +7,9 @@ import { getWebSocketUrl } from "@/lib/utils";
 import { Game, WSEvent } from "@/types/game";
 // @ts-expect-error: not sure if cookie-cutter is typed
 import cookieCutter from "cookie-cutter";
+import Head from "next/head";
+import { createContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface GameContextType {

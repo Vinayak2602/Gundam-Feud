@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import "@/i18n/i18n";
 
 interface ScoreMonitorProps {
   points: number;

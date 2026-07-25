@@ -1,4 +1,3 @@
-import "@/i18n/i18n";
 import { Game, WSEvent } from "@/src/types/game";
 import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";

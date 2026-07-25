@@ -72,9 +72,7 @@ export default function AnnouncementBanner() {
   }
 
   return (
-    <div
-      className={`flex items-center justify-center gap-3 border-b-2 px-4 py-3 ${severityClasses[banner.severity]}`}
-    >
+    <div className={`flex items-center justify-center gap-3 border-b-2 px-4 py-3 ${severityClasses[banner.severity]}`}>
       <div className="min-w-0 flex-1 text-center">
         <p className="text-xs font-semibold uppercase">{getPublishedLabel(banner.updatedAt)}</p>
         <p className="text-base font-semibold">{banner.text}</p>
