@@ -96,8 +96,6 @@ function csvToColdFriendlyFeudFormat(
       input: "",
       revealed: false,
     };
-    let answer = true;
-    let answerCount = 0;
     const index = row + headerOffSet;
 
     if (index >= csvData.length || index >= roundCount + roundFinalCount + headerOffSet) {
@@ -105,41 +103,35 @@ function csvToColdFriendlyFeudFormat(
     }
 
     if (index < roundCount + headerOffSet) {
-      colLoop: for (let col = 0; col < csvData[index].length; col++) {
-        if (col === 0) {
-          rowPush.question = csvData[index][col];
-          continue colLoop;
+      rowPush.question = csvData[index][0];
+      for (let col = 1; col < csvData[index].length; col += 2) {
+        const answerText = csvData[index][col] ?? "";
+        const pointsText = csvData[index][col + 1] ?? "";
+
+        if (answerText.trim() === "" && pointsText.trim() === "") {
+          continue;
         }
-        if (answer) {
-          rowPush.answers.push({
-            ans: csvData[index][col],
-            pnt: 0,
-            trig: false,
-          });
-          answer = !answer;
-        } else {
-          rowPush.answers[answerCount].pnt = parseInt(csvData[index][col] || "0", 10);
-          answerCount++;
-          answer = !answer;
-        }
+
+        rowPush.answers.push({
+          ans: answerText,
+          pnt: parseInt(pointsText || "0", 10),
+          trig: false,
+        });
       }
       if (rowPush.question) {
         gameTemplate.rounds.push(rowPush as Round);
       }
     } else {
-      colLoop: for (let col = 0; col < csvData[index].length; col++) {
-        if (col === 0) {
-          finalRowPush.question = csvData[index][col];
-          continue colLoop;
+      finalRowPush.question = csvData[index][0];
+      for (let col = 1; col < csvData[index].length; col += 2) {
+        const answerText = csvData[index][col] ?? "";
+        const pointsText = csvData[index][col + 1] ?? "";
+
+        if (answerText.trim() === "" && pointsText.trim() === "") {
+          continue;
         }
-        if (answer) {
-          finalRowPush.answers.push([csvData[index][col], 0]);
-          answer = !answer;
-        } else {
-          finalRowPush.answers[answerCount][1] = parseInt(csvData[index][col] || "0", 10);
-          answerCount++;
-          answer = !answer;
-        }
+
+        finalRowPush.answers.push([answerText, parseInt(pointsText || "0", 10)]);
       }
       if (finalRowPush.question) {
         gameTemplate.final_round.push(finalRowPush as FinalRound);
