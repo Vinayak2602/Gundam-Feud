@@ -63,6 +63,37 @@ test("can track points between rounds", async () => {
   }).toPass({ timeout: 2000 });
 });
 
+test("hides revealed answers before changing rounds", async () => {
+  await adminPage.gameSelector.selectOption({ index: 1 });
+  await adminPage.startRoundOneButton.click();
+
+  const answer = spectator.page.getByTestId("answer0Answered");
+  const answerCard = spectator.page.getByTestId("answer0Card");
+
+  await adminPage.questions[0].click();
+  await expect(answerCard).toHaveAttribute("style", /rotateX\(-180deg\)/);
+  const firstRoundAnswer = await answer.textContent();
+  expect(firstRoundAnswer).not.toBeNull();
+  await answerCard.evaluate((card) => Promise.all(card.getAnimations().map((animation) => animation.finished)));
+  await answerCard.evaluate((card) => {
+    card.addEventListener(
+      "transitionend",
+      () => {
+        const answerText = card.querySelector("#answer0Answered")?.textContent ?? "";
+        card.setAttribute("data-answer-at-transition-end", answerText);
+      },
+      { once: true }
+    );
+  });
+
+  await adminPage.nextRoundButton.click();
+
+  await expect(answer).toHaveText(firstRoundAnswer!);
+  await expect(answerCard).toHaveAttribute("style", /rotateX\(0deg\)/);
+  await expect(answerCard).toHaveAttribute("data-answer-at-transition-end", firstRoundAnswer!);
+  await expect(answer).not.toHaveText(firstRoundAnswer!);
+});
+
 test("can see mistakes", async () => {
   const gamePage = new GamePage(spectator.page);
 

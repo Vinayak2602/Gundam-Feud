@@ -1,5 +1,6 @@
 import FitText from "@/components/FitText";
 import { Round } from "@/types/game";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface QuestionBoardProps {
@@ -88,10 +89,28 @@ function CardEdge() {
   );
 }
 
-function FlipCard({ index, ans, pnt, trig }: { index: number; ans: string; pnt: number; trig: boolean }) {
+function FlipCard({
+  index,
+  ans,
+  pnt,
+  trig,
+  onFlipComplete,
+}: {
+  index: number;
+  ans: string;
+  pnt: number;
+  trig: boolean;
+  onFlipComplete: () => void;
+}) {
   return (
     <div
+      id={`answer${index}Card`}
       className="flip-card-inner relative h-full w-full"
+      onTransitionEnd={(event) => {
+        if (event.target === event.currentTarget && event.propertyName === "transform") {
+          onFlipComplete();
+        }
+      }}
       style={{
         transformStyle: "preserve-3d",
         transition: "transform 0.33s ease-in-out",
@@ -105,9 +124,61 @@ function FlipCard({ index, ans, pnt, trig }: { index: number; ans: string; pnt: 
   );
 }
 
+function getRoundContentKey(round: Round) {
+  return JSON.stringify([round.question, round.answers.map(({ ans, pnt }) => [ans, pnt])]);
+}
+
 export default function QuestionBoard({ round }: QuestionBoardProps) {
+  const [displayedRound, setDisplayedRoundState] = useState(round);
+  const displayedRoundRef = useRef(round);
+  const pendingRoundRef = useRef<Round | null>(null);
+  const isHidingAnswersRef = useRef(false);
+  const roundContentKey = getRoundContentKey(round);
+
+  const setDisplayedRound = useCallback((nextRound: Round) => {
+    displayedRoundRef.current = nextRound;
+    setDisplayedRoundState(nextRound);
+  }, []);
+
+  useEffect(() => {
+    const currentRound = displayedRoundRef.current;
+
+    if (isHidingAnswersRef.current) {
+      pendingRoundRef.current = round;
+      return;
+    }
+
+    if (getRoundContentKey(currentRound) === roundContentKey) {
+      setDisplayedRound(round);
+      return;
+    }
+
+    if (currentRound.answers.some(({ trig }) => trig)) {
+      // Keep the current answer data mounted until the hide animation finishes.
+      pendingRoundRef.current = round;
+      isHidingAnswersRef.current = true;
+      setDisplayedRound({
+        ...currentRound,
+        answers: currentRound.answers.map((answer) => ({ ...answer, trig: false })),
+      });
+      return;
+    }
+
+    setDisplayedRound(round);
+  }, [round, roundContentKey, setDisplayedRound]);
+
+  const handleFlipComplete = useCallback(() => {
+    if (!isHidingAnswersRef.current) return;
+
+    isHidingAnswersRef.current = false;
+    const pendingRound = pendingRoundRef.current;
+    pendingRoundRef.current = null;
+
+    if (pendingRound) setDisplayedRound(pendingRound);
+  }, [setDisplayedRound]);
+
   const slots = Array.from({ length: 8 }, (_, i) =>
-    i < round.answers.length ? { ...round.answers[i], index: i } : null
+    i < displayedRound.answers.length ? { ...displayedRound.answers[i], index: i } : null
   );
 
   return (
@@ -117,7 +188,13 @@ export default function QuestionBoard({ round }: QuestionBoardProps) {
           {slot === null ? (
             <EmptySlot />
           ) : (
-            <FlipCard index={slot.index} ans={slot.ans} pnt={slot.pnt} trig={slot.trig} />
+            <FlipCard
+              index={slot.index}
+              ans={slot.ans}
+              pnt={slot.pnt}
+              trig={slot.trig}
+              onFlipComplete={handleFlipComplete}
+            />
           )}
         </div>
       ))}
