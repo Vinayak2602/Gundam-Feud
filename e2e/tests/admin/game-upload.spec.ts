@@ -1,6 +1,6 @@
 import { PATHS } from "@/e2e/utils/constants";
 import { expect, test } from "@playwright/test";
-import { Setup } from "../lib/Setup";
+import { PlayerType, Setup } from "../lib/Setup";
 import { AdminPage } from "../models/AdminPage";
 import { BuzzerPage } from "../models/BuzzerPage";
 
@@ -49,6 +49,18 @@ test("can upload csv game", async () => {
   await expect(adminPage.currentRoundQuestionText).toHaveText(
     "We Asked 100 Moms: On A Scale From 1-10, How Much Have You Become Like Your Own Mom With Age?"
   );
+});
+
+test("csv import omits empty answer pairs", async () => {
+  const spectator = await s.addPlayer(PlayerType.SPECTATOR);
+
+  await uploadGameFile(PATHS.PADDED_GAME_CSV);
+  await adminPage.csv.submit.click();
+  await adminPage.startRoundOneButton.click();
+
+  await expect(host.page.locator('[id^="question"][id$="Button"]')).toHaveCount(5);
+  await expect(spectator.page.getByTestId("answer4UnAnswered")).toBeVisible();
+  await expect(spectator.page.getByTestId("answer5UnAnswered")).toHaveCount(0);
 });
 
 async function uploadGameFile(filePath: string) {
