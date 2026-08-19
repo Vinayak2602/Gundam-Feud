@@ -171,6 +171,9 @@ export interface Game {
   is_sudden_death?: boolean;
   winner_team?: number | null;
   game_over?: boolean;
+  steal_pending?: boolean;
+  steal_team?: number | null;
+  steal_from_team?: number | null;
 
   // Final round properties
   is_final_round: boolean;

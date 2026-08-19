@@ -108,12 +108,7 @@ export default function AdminPage({ ws, game, setGame, room, quitGame, playerId 
   }
 
   return (
-    <div
-      className="lg:min-w-0"
-      style={{
-        minWidth: "100vh",
-      }}
-    >
+    <div className="w-full max-w-full lg:min-w-0">
       <RoomSettings
         room={room}
         game={game}

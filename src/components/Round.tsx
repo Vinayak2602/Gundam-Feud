@@ -25,7 +25,10 @@ export default function Round({ game }: RoundProps) {
         )}
       </div>
       {game.settings.hide_questions === false && (
-        <p id="roundQuestionText" className="mt-1 max-w-[1060px] text-center text-2xl text-foreground opacity-80">
+        <p
+          id="roundQuestionText"
+          className="mt-2 max-w-[1060px] text-center text-4xl font-bold leading-tight text-foreground md:text-5xl"
+        >
           {round.question}
         </p>
       )}

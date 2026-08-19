@@ -158,6 +158,8 @@ export default function Home() {
               setHost(false);
               cookieCutter.set("session", "");
             }
+          } else if (json.action === "data") {
+            setGame(json.data);
           } else if (json.action === "ping") {
             console.debug("index.js: ping");
           } else {
@@ -341,12 +343,7 @@ export default function Home() {
             setHostPassword: setHostPassword,
           }}
         >
-          <div
-            style={{
-              width: "100vh",
-            }}
-            className={`${game?.settings?.theme ?? "default"} h-screen w-screen`}
-          >
+          <div className={`${game?.settings?.theme ?? "default"} min-h-screen w-full overflow-x-hidden bg-background`}>
             {/* TODO put in the theme switcher and put setting here */}
             {getPage()}
           </div>

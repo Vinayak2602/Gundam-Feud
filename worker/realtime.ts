@@ -64,6 +64,9 @@ interface Game {
   is_sudden_death: boolean;
   winner_team: number | null;
   game_over: boolean;
+  steal_pending: boolean;
+  steal_team: number | null;
+  steal_from_team: number | null;
   is_final_round: boolean;
   is_final_second: boolean;
   hide_first_round: boolean;
@@ -255,6 +258,28 @@ function now() {
   return Date.now();
 }
 
+function mergeRegisteredPlayers(
+  previousPlayers: Record<string, RegisteredPlayer>,
+  incomingPlayers: Record<string, RegisteredPlayer> = {}
+) {
+  const merged: Record<string, RegisteredPlayer> = {};
+  for (const [id, previousPlayer] of Object.entries(previousPlayers)) {
+    const incomingPlayer = incomingPlayers[id];
+    if (!incomingPlayer) {
+      merged[id] = previousPlayer;
+      continue;
+    }
+
+    merged[id] = {
+      ...previousPlayer,
+      name: incomingPlayer.name ?? previousPlayer.name,
+      hidden: incomingPlayer.hidden ?? previousPlayer.hidden,
+      team: incomingPlayer.team ?? previousPlayer.team,
+    };
+  }
+  return merged;
+}
+
 function createGame(room: string): Game {
   return {
     room,
@@ -286,6 +311,9 @@ function createGame(room: string): Game {
     is_sudden_death: false,
     winner_team: null,
     game_over: false,
+    steal_pending: false,
+    steal_team: null,
+    steal_from_team: null,
     is_final_round: false,
     is_final_second: false,
     hide_first_round: false,
@@ -598,6 +626,9 @@ export class RoomObject {
     game.is_sudden_death = false;
     game.winner_team = null;
     game.game_over = false;
+    game.steal_pending = false;
+    game.steal_team = null;
+    game.steal_from_team = null;
     await this.saveGame(game);
     this.broadcastData(game);
   }
@@ -605,6 +636,7 @@ export class RoomObject {
   private async updateGame(data: Game) {
     const previous = await this.getGame();
     const game = { ...previous, ...data, room: previous.room, host: previous.host };
+    game.registeredPlayers = mergeRegisteredPlayers(previous.registeredPlayers, data.registeredPlayers);
     if (previous.round !== game.round || previous.title !== game.title) {
       game.buzzed = [];
       game.round_start_time = now();

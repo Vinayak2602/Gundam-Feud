@@ -78,6 +78,9 @@ type game struct {
 	IsSuddenDeath     bool                         `json:"is_sudden_death"`
 	WinnerTeam        *int                         `json:"winner_team"`
 	GameOver          bool                         `json:"game_over"`
+	StealPending      bool                         `json:"steal_pending"`
+	StealTeam         *int                         `json:"steal_team"`
+	StealFromTeam     *int                         `json:"steal_from_team"`
 	IsFinalRound      bool                         `json:"is_final_round"`
 	IsFinalSecond     bool                         `json:"is_final_second"`
 	HideFirstRound    bool                         `json:"hide_first_round"`

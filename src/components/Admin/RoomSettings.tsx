@@ -38,7 +38,7 @@ export default function RoomSettings({
         {room}
       </p>
       <hr />
-      <div className="flex flex-row items-center justify-evenly p-5">
+      <div className="flex flex-wrap items-center justify-center gap-4 p-5">
         {/* ADMIN BUTTONS */}
         <Link href="/game" target="_blank" id="openGameWindowButton">
           <button className="text-2xl">

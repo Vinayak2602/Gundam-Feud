@@ -79,6 +79,14 @@ export default function GameDisplay({
     game.round >= REGULATION_ROUND_COUNT - 1 &&
     game.round < game.rounds.length - 1 &&
     pointsGiven.state;
+  const stealingTeam = game.steal_team != null ? game.teams[game.steal_team] : null;
+  const defendingTeam = game.steal_from_team != null ? game.teams[game.steal_from_team] : null;
+
+  function clearStealState() {
+    game.steal_pending = false;
+    game.steal_team = null;
+    game.steal_from_team = null;
+  }
 
   return (
     <div>
@@ -114,6 +122,7 @@ export default function GameDisplay({
                     game.game_over = false;
                     game.is_final_round = true;
                     game.is_final_second = false;
+                    clearStealState();
                     // @ts-expect-error: need a better way to update these values
                     setGame((prv) => ({ ...prv }));
                     send({ action: "data", data: game });
@@ -146,6 +155,7 @@ export default function GameDisplay({
                   game.title = false;
                   game.is_final_round = false;
                   game.is_sudden_death = true;
+                  clearStealState();
                   game.round = suddenDeathRoundIndex;
                   game.teams[0].mistakes = 0;
                   game.teams[1].mistakes = 0;
@@ -168,13 +178,22 @@ export default function GameDisplay({
                 {t("Start Sudden Death")}
               </button>
             ) : null}
-            {game.game_over && winnerTeam ? (
-              <p className="text-xl">{t("Room closes after 5 minutes")}</p>
-            ) : null}
+            {game.game_over && winnerTeam ? <p className="text-xl">{t("Room closes after 5 minutes")}</p> : null}
           </div>
         )}
+        {game.steal_pending && stealingTeam && defendingTeam ? (
+          <div className="rounded border-4 border-warning-500 bg-secondary-300 p-5 text-center text-foreground">
+            <p id="stealPromptText" className="text-3xl font-bold">
+              {stealingTeam.name} {t("can steal")} {t("number", { count: game.point_tracker[game.round] })}{" "}
+              {t("points")}
+            </p>
+            <p className="pt-2 text-xl">
+              {t("Use Steals Points for a correct answer, or Missed Steal to award the bank to")} {defendingTeam.name}.
+            </p>
+          </div>
+        ) : null}
 
-        <div className="flex grow flex-row space-x-10">
+        <div className="flex grow flex-col gap-4 lg:flex-row lg:space-x-10">
           {/* TITLE SCREEN BUTTON */}
           <button
             id="titleCardButton"
@@ -187,6 +206,7 @@ export default function GameDisplay({
               game.game_over = false;
               game.is_final_round = false;
               game.is_final_second = false;
+              clearStealState();
               // @ts-expect-error: need a better way to update these values
               setGame((prv) => ({ ...prv }));
               send({ action: "data", data: game });
@@ -208,6 +228,7 @@ export default function GameDisplay({
                 game.game_over = false;
                 game.is_final_round = true;
                 game.is_final_second = false;
+                clearStealState();
                 // @ts-expect-error: need a better way to update these values
                 setGame((prv) => ({ ...prv }));
                 send({ action: "data", data: game });
@@ -233,6 +254,7 @@ export default function GameDisplay({
               game.is_final_second = false;
               game.teams[0].mistakes = 0;
               game.teams[1].mistakes = 0;
+              clearStealState();
               game.title = false;
               // @ts-expect-error: need a better way to update these values
               setGame((prv) => ({ ...prv }));
@@ -252,7 +274,7 @@ export default function GameDisplay({
           </select>
         </div>
         {/* START ROUND 1 BUTTON */}
-        <div className="flex flex-row space-x-10">
+        <div className="flex flex-col gap-4 lg:flex-row lg:space-x-10">
           <button
             id="startRoundOneButton"
             className="grow rounded border-4 bg-secondary-300 p-10 text-2xl text-foreground"
@@ -262,6 +284,7 @@ export default function GameDisplay({
               game.is_sudden_death = false;
               game.is_final_second = false;
               game.round = 0;
+              clearStealState();
               // @ts-expect-error: need a better way to update these values
               setGame((prv) => ({
                 ...prv,
@@ -286,6 +309,7 @@ export default function GameDisplay({
               game.is_final_round = false;
               game.is_sudden_death = false;
               game.is_final_second = false;
+              clearStealState();
               game.teams[0].mistakes = 0;
               game.teams[1].mistakes = 0;
               if (game.round < game.rounds.length - 1) {
@@ -320,6 +344,7 @@ export default function GameDisplay({
               for (const team in game.teams) {
                 game.teams[team].mistakes = 0;
               }
+              clearStealState();
               // @ts-expect-error: need a better way to update these values
               setGame((prv) => ({ ...prv }));
               send({ action: "data", data: game });
@@ -330,7 +355,7 @@ export default function GameDisplay({
         </div>
 
         {/* GETS POINTS MISTAKE */}
-        <div className="grid grid-flow-col grid-rows-2 gap-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <TeamControls
             game={game}
             setGame={setGame}
@@ -357,7 +382,10 @@ export default function GameDisplay({
         <div>
           <div className="flex flex-col space-y-2 px-10 pt-5">
             {/* QUESTION */}
-            <p id="currentRoundQuestionText" className="text-3xl font-bold text-foreground">
+            <p
+              id="currentRoundQuestionText"
+              className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
+            >
               {current_round.question}
             </p>
             {/* POINT TRACKER */}

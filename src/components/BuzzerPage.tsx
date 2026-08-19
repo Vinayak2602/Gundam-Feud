@@ -45,6 +45,7 @@ export default function BuzzerPage({ ws, game, id, setGame, room, setTeam, team 
 
   const playBuzzerSound = () => {
     const audio = new Audio("buzzer.wav");
+    audio.volume = 0.25;
     audio.play().catch((error) => {
       console.warn("Error playing buzzer sound:", error);
     });
@@ -170,20 +171,16 @@ export default function BuzzerPage({ ws, game, id, setGame, room, setTeam, team 
                 {/* Buzzer Section TODO replace with function*/}
                 <div className="w-full text-center">
                   {buzzed || game.buzzed.map((a) => a.id).includes(id) ? (
-                    <Image
-                      className="inline-block w-1/2"
+                    <div
                       id="buzzerButtonPressed"
-                      width={500}
-                      height={200}
-                      alt="Buzzer Button"
-                      src="/buzzed.svg"
-                    />
+                      className="mx-auto flex w-full max-w-sm flex-col items-center rounded-full bg-secondary-300 p-4 opacity-80"
+                    >
+                      <Image className="w-full" width={500} height={200} alt="Buzzer Button" src="/buzzed.svg" />
+                    </div>
                   ) : (
-                    <Image
+                    <button
                       id="buzzerButton"
-                      width={500}
-                      height={200}
-                      className="inline-block w-1/2 cursor-pointer"
+                      className="mx-auto flex w-full max-w-sm cursor-pointer flex-col items-center rounded-full bg-failure-500 p-4 shadow-lg active:scale-95"
                       onClick={() => {
                         send({ action: "buzz", id: id });
                         // Play sound based on settings
@@ -193,9 +190,11 @@ export default function BuzzerPage({ ws, game, id, setGame, room, setTeam, team 
                           }
                         }
                       }}
-                      src="/buzz.svg"
-                      alt="Buzzer Button Pressed"
-                    />
+                      aria-label={t("Buzz")}
+                    >
+                      <Image width={500} height={200} className="w-full" src="/buzz.svg" alt="" />
+                      <span className="pb-3 text-4xl font-black uppercase tracking-normal text-white">{t("Buzz")}</span>
+                    </button>
                   )}
                   <p className="p-2 italic text-secondary-900">{t("buzzer is reset between rounds")}</p>
                 </div>

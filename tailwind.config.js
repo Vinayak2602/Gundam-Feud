@@ -13,7 +13,7 @@ module.exports = {
       defaultTheme: {
         extend: {
           colors: {
-            background: "white",
+            background: "#18181B",
             success: {
               900: "#14532D",
               700: "#15803D",
@@ -48,7 +48,7 @@ module.exports = {
               300: "#93C5FD",
               200: "#BFDBFE",
             },
-            foreground: "black",
+            foreground: "white",
             fastm: {
               text: "white",
               holder: "black",

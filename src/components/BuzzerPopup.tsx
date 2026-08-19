@@ -41,6 +41,7 @@ export default function BuzzerPopup({ buzzed }: BuzzerPopupProps) {
       // Source: https://freesound.org/s/423219/
       // License: Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/)
       const audio = new Audio("buzzer.wav");
+      audio.volume = 0.25;
 
       // Handle audio play errors gracefully
       // If we don't, popup will not go away
