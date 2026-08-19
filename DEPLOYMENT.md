@@ -14,41 +14,45 @@ The realtime Worker uses:
 
 Rooms are temporary. When the host quits or all clients leave, the room is scheduled for cleanup after a 5 minute grace period.
 
-## Local Commands
+## Cloudflare Workers Builds
 
-Install dependencies:
+Use Cloudflare Workers Builds for the frontend Worker so OpenNext runs in
+Cloudflare's Linux build environment.
 
-```sh
-npm ci
-```
+Cloudflare account:
 
-Run the Next.js app locally:
+- `gvinayak1111@gmail.com`
 
-```sh
-npm run dev
-```
+GitHub repository:
 
-Run the realtime Worker locally:
+- `https://github.com/Vinayak2602/Gundam-Feud`
 
-```sh
-npm run realtime:dev
-```
+Frontend Worker:
 
-Deploy the realtime Worker:
+- Worker name: `gundam-feud`
+- Branch: `master`
+- Root directory: `/`
+- Build command: leave empty
+- Deploy command: `npm run cf:deploy`
+- Production route/custom domain: `gunfeud.scurfer.dev`
 
-```sh
-npm run realtime:deploy
-```
+Realtime Worker:
 
-Build/deploy the frontend Worker:
+- Worker name: `gundam-feud-realtime`
+- Wrangler config: `wrangler.realtime.toml`
+- Production route: `gunfeud.scurfer.dev/api/ws*`
+- Deploy command, if connecting this Worker to Git later:
+  `npx wrangler deploy --config wrangler.realtime.toml`
 
-```sh
-npm run cf:deploy
-```
+The realtime Worker was initially deployed with Wrangler. The frontend should be
+deployed through Cloudflare Workers Builds from GitHub.
 
 ## Environment
 
 Set `NEXT_PUBLIC_WS_URL` for the frontend if the realtime Worker is deployed on a different host from the frontend.
+
+For the current `gunfeud.scurfer.dev` same-origin setup, leave `NEXT_PUBLIC_WS_URL`
+unset. The app will connect to `/api/ws`.
 
 Example:
 
@@ -68,4 +72,7 @@ npx tsc -p tsconfig.worker.json
 npx wrangler deploy --config wrangler.realtime.toml --dry-run
 ```
 
-OpenNext Cloudflare build reached the bundle phase but failed on Windows with a symlink `EPERM` error. Cloudflare/OpenNext also printed a Windows compatibility warning. Use WSL or an environment with symlink support for the frontend Worker packaging step.
+OpenNext Cloudflare build reached the bundle phase locally on Windows but failed
+with a symlink `EPERM` error. Cloudflare/OpenNext also printed a Windows
+compatibility warning. This is why the frontend deployment should use
+Cloudflare Workers Builds or another Linux CI environment.
