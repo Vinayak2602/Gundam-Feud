@@ -75,6 +75,9 @@ type game struct {
 	Title             bool                         `json:"title"`
 	TitleText         string                       `json:"title_text"`
 	PointTracker      []int                        `json:"point_tracker"`
+	IsSuddenDeath     bool                         `json:"is_sudden_death"`
+	WinnerTeam        *int                         `json:"winner_team"`
+	GameOver          bool                         `json:"game_over"`
 	IsFinalRound      bool                         `json:"is_final_round"`
 	IsFinalSecond     bool                         `json:"is_final_second"`
 	HideFirstRound    bool                         `json:"hide_first_round"`
@@ -127,6 +130,9 @@ func NewGame(roomCode string) room {
 			Title:          true,
 			TitleText:      "",
 			PointTracker:   []int{},
+			IsSuddenDeath:  false,
+			WinnerTeam:     nil,
+			GameOver:       false,
 			IsFinalRound:   false,
 			IsFinalSecond:  false,
 			HideFirstRound: false,

@@ -1,0 +1,13 @@
+name = "gundam-feud"
+account_id = "455526e1071cea28fc356e63d3f4b3f4"
+main = ".open-next/worker.js"
+compatibility_date = "2026-08-19"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[routes]]
+pattern = "gunfeud.scurfer.dev"
+custom_domain = true

@@ -3,6 +3,8 @@ import { Game, WSEvent } from "@/src/types/game";
 import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 
+const MAIN_GAME_TARGET_POINTS = 300;
+
 interface TeamControlsProps {
   game: Game;
   setGame: Dispatch<SetStateAction<Game | null>>;
@@ -23,6 +25,9 @@ export default function TeamControls({ game, setGame, team, send, setPointsGiven
         className={`border-4 text-2xl ${pointsGiven.color} rounded p-10 ${pointsGiven.textColor}`}
         onClick={() => {
           game.teams[team].points = game.point_tracker[game.round] + game.teams[team].points;
+          if (!game.is_final_round && game.teams[team].points >= MAIN_GAME_TARGET_POINTS) {
+            game.winner_team = team;
+          }
           setPointsGiven({
             state: true,
             color: "bg-secondary-500",

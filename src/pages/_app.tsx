@@ -34,8 +34,8 @@ export default function MyApp({ Component, pageProps }: MyAppProps) {
 
         {/* Theme Colors */}
         <meta name="theme-color" content="#c94343" />
-        <meta name="apple-mobile-web-app-title" content="FriFeud" />
-        <meta name="application-name" content="Friendly Feud" />
+        <meta name="apple-mobile-web-app-title" content="Gundam Feud" />
+        <meta name="application-name" content="Gundam Feud" />
         {/* Prevent unloaded theme on page refresh causing white flash if dark theme */}
       </Head>
       <Script

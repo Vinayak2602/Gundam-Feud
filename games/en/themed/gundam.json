@@ -1,0 +1,138 @@
+{
+  "rounds": [
+    {
+      "question": "Name something Gundam fans argue about endlessly.",
+      "answers": [
+        { "ans": "Which Gundam is the strongest?", "pnt": 31 },
+        { "ans": "UC vs. AU", "pnt": 22 },
+        { "ans": "Best protagonist", "pnt": 16 },
+        { "ans": "Best Char / rival", "pnt": 12 },
+        { "ans": "Best mobile suit design", "pnt": 9 },
+        { "ans": "Dub vs. sub", "pnt": 6 },
+        { "ans": "Best series ending", "pnt": 4 }
+      ],
+      "multiply": 1
+    },
+    {
+      "question": "Name a Gundam mobile suit that instantly gets a fan excited.",
+      "answers": [
+        { "ans": "RX-78-2 Gundam", "pnt": 28 },
+        { "ans": "Nu Gundam", "pnt": 18 },
+        { "ans": "Zeta Gundam", "pnt": 16 },
+        { "ans": "Unicorn Gundam", "pnt": 14 },
+        { "ans": "Wing Zero", "pnt": 10 },
+        { "ans": "Barbatos", "pnt": 8 },
+        { "ans": "Sazabi", "pnt": 6 }
+      ],
+      "multiply": 1
+    },
+    {
+      "question": "Name something you might say after seeing a ridiculously expensive Gunpla.",
+      "answers": [
+        { "ans": "That's too expensive!", "pnt": 30 },
+        { "ans": "I'll buy it anyway.", "pnt": 24 },
+        { "ans": "Where's the sale?", "pnt": 15 },
+        { "ans": "I need another shelf.", "pnt": 12 },
+        { "ans": "My partner will kill me.", "pnt": 8 },
+        { "ans": "Is this P-Bandai?", "pnt": 7 },
+        { "ans": "Take my money.", "pnt": 4 }
+      ],
+      "multiply": 1
+    },
+    {
+      "question": "Name a Gundam character fans love to quote or imitate.",
+      "answers": [
+        { "ans": "Char Aznable", "pnt": 28 },
+        { "ans": "Amuro Ray", "pnt": 20 },
+        { "ans": "Bright Noa", "pnt": 16 },
+        { "ans": "Quattro Bajeena", "pnt": 12 },
+        { "ans": "Duo Maxwell", "pnt": 10 },
+        { "ans": "Kamille Bidan", "pnt": 8 },
+        { "ans": "Master Asia", "pnt": 6 }
+      ],
+      "multiply": 1
+    },
+    {
+      "question": "Name something that makes a Gundam battle unforgettable.",
+      "answers": [
+        { "ans": "Amazing music", "pnt": 25 },
+        { "ans": "A great rival fight", "pnt": 21 },
+        { "ans": "Newtype powers", "pnt": 16 },
+        { "ans": "A huge explosion", "pnt": 14 },
+        { "ans": "Iconic mobile suit", "pnt": 10 },
+        { "ans": "Emotional stakes", "pnt": 8 },
+        { "ans": "A dramatic speech", "pnt": 6 }
+      ],
+      "multiply": 2
+    },
+    {
+      "question": "Name a Gundam series a newcomer might be told to watch first.",
+      "answers": [
+        { "ans": "Mobile Suit Gundam", "pnt": 25 },
+        { "ans": "Iron-Blooded Orphans", "pnt": 21 },
+        { "ans": "Gundam 00", "pnt": 17 },
+        { "ans": "The Witch from Mercury", "pnt": 15 },
+        { "ans": "Gundam Unicorn", "pnt": 10 },
+        { "ans": "Gundam Wing", "pnt": 7 },
+        { "ans": "G Gundam", "pnt": 5 }
+      ],
+      "multiply": 2
+    },
+    {
+      "question": "Name something a Gundam pilot is likely to experience.",
+      "answers": [
+        { "ans": "Trauma", "pnt": 29 },
+        { "ans": "A rival", "pnt": 18 },
+        { "ans": "A dramatic cockpit speech", "pnt": 15 },
+        { "ans": "Losing a friend", "pnt": 13 },
+        { "ans": "Newtype awakening", "pnt": 10 },
+        { "ans": "A broken mobile suit", "pnt": 8 },
+        { "ans": "Questionable military orders", "pnt": 7 }
+      ],
+      "multiply": 3
+    }
+  ],
+  "final_round": [
+    {
+      "question": "Name a Gundam mobile suit fans instantly recognize.",
+      "answers": [
+        ["RX-78-2 Gundam", 42],
+        ["Zaku II", 31],
+        ["Wing Zero", 18],
+        ["Unicorn Gundam", 15],
+        ["Barbatos", 11]
+      ]
+    },
+    {
+      "question": "Name something Gunpla builders always need more of.",
+      "answers": [
+        ["Shelf space", 39],
+        ["Nippers", 25],
+        ["Panel liner", 18],
+        ["Decals", 12],
+        ["Time", 8]
+      ]
+    },
+    {
+      "question": "Name a reason a model kit backlog gets bigger.",
+      "answers": [
+        ["Sales", 38],
+        ["Preorders", 27],
+        ["Limited releases", 20],
+        ["No time to build", 14],
+        ["New grade announced", 9]
+      ]
+    },
+    {
+      "question": "Name a word mecha fans use a lot.",
+      "answers": [
+        ["Mobile suit", 44],
+        ["Newtype", 29],
+        ["Gunpla", 23],
+        ["Colony", 13],
+        ["Beam saber", 10]
+      ]
+    }
+  ],
+  "final_round_timers": [20, 25]
+}

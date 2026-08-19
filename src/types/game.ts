@@ -44,6 +44,7 @@ export const WSAction = {
   DEL_LOGO_UPLOAD: "del_logo_upload",
   TITLE_MUSIC_UPLOAD: "title_music_upload",
   DEL_TITLE_MUSIC_UPLOAD: "del_title_music_upload",
+  END_GAME: "end_game",
   PONG: "pong",
   BUZZ: "buzz",
   REGISTER_BUZZ: "registerbuzz",
@@ -167,6 +168,9 @@ export interface Game {
   // Round management
   round: number;
   rounds: Round[];
+  is_sudden_death?: boolean;
+  winner_team?: number | null;
+  game_over?: boolean;
 
   // Final round properties
   is_final_round: boolean;

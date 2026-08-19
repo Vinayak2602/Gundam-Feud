@@ -10,6 +10,8 @@ import Image from "next/image";
 import { Dispatch, RefObject, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 
+const REGULATION_ROUND_COUNT = 4;
+
 interface GameDisplayProps {
   ws: RefObject<WebSocket>;
   setGame: Dispatch<SetStateAction<Game | null>>;
@@ -51,8 +53,12 @@ export default function GameDisplay({
   }
 
   let current_screen;
-  if (game.title) {
+  if (game.game_over && game.winner_team != null) {
+    current_screen = t("Game Over");
+  } else if (game.title) {
     current_screen = t("title");
+  } else if (game.is_sudden_death) {
+    current_screen = t("Sudden Death");
   } else if (!game.is_final_round) {
     current_screen = `${t("round")} ${t("number", {
       count: game.round + 1,
@@ -66,6 +72,13 @@ export default function GameDisplay({
   // var put it into function scope
   const current_round = game.rounds[game.round];
   console.debug("Current round:", current_round);
+  const winnerTeam = game.winner_team != null ? game.teams[game.winner_team] : null;
+  const canStartSuddenDeath =
+    !winnerTeam &&
+    !game.is_sudden_death &&
+    game.round >= REGULATION_ROUND_COUNT - 1 &&
+    game.round < game.rounds.length - 1 &&
+    pointsGiven.state;
 
   return (
     <div>
@@ -86,6 +99,80 @@ export default function GameDisplay({
             {t("Current Screen")}: {current_screen}
           </p>
         </div>
+        {(winnerTeam || canStartSuddenDeath || game.game_over) && (
+          <div className="flex flex-wrap items-center justify-center gap-4 rounded border-4 border-warning-300 bg-secondary-300 p-5 text-foreground">
+            {winnerTeam ? (
+              <>
+                <p className="text-3xl font-bold">
+                  {t("Winner")}: {winnerTeam.name}
+                </p>
+                <button
+                  id="winnerFastMoneyButton"
+                  className="rounded border-4 bg-success-300 p-4 text-2xl text-foreground"
+                  onClick={() => {
+                    game.title = false;
+                    game.game_over = false;
+                    game.is_final_round = true;
+                    game.is_final_second = false;
+                    // @ts-expect-error: need a better way to update these values
+                    setGame((prv) => ({ ...prv }));
+                    send({ action: "data", data: game });
+                    send({ action: "set_timer", data: game.final_round_timers[0] });
+                  }}
+                >
+                  {t("Play Fast Money")}
+                </button>
+                <button
+                  id="endGameButton"
+                  className="rounded border-4 bg-failure-200 p-4 text-2xl text-foreground"
+                  onClick={() => {
+                    game.game_over = true;
+                    // @ts-expect-error: need a better way to update these values
+                    setGame((prv) => ({ ...prv }));
+                    send({ action: "end_game", data: game });
+                  }}
+                >
+                  {t("End Game")}
+                </button>
+              </>
+            ) : null}
+            {canStartSuddenDeath ? (
+              <button
+                id="startSuddenDeathButton"
+                className="rounded border-4 bg-warning-200 p-4 text-2xl text-foreground"
+                onClick={() => {
+                  const suddenDeathRoundIndex = game.round + 1;
+                  const suddenDeathRound = game.rounds[suddenDeathRoundIndex];
+                  game.title = false;
+                  game.is_final_round = false;
+                  game.is_sudden_death = true;
+                  game.round = suddenDeathRoundIndex;
+                  game.teams[0].mistakes = 0;
+                  game.teams[1].mistakes = 0;
+                  game.rounds[suddenDeathRoundIndex] = {
+                    ...suddenDeathRound,
+                    multiply: 3,
+                    answers: suddenDeathRound.answers.slice(0, 1).map((answer) => ({ ...answer, trig: false })),
+                  };
+                  game.point_tracker[suddenDeathRoundIndex] = 0;
+                  setPointsGiven({
+                    state: false,
+                    color: "bg-success-500",
+                    textColor: "text-foreground",
+                  });
+                  // @ts-expect-error: need a better way to update these values
+                  setGame((prv) => ({ ...prv }));
+                  send({ action: "data", data: game });
+                }}
+              >
+                {t("Start Sudden Death")}
+              </button>
+            ) : null}
+            {game.game_over && winnerTeam ? (
+              <p className="text-xl">{t("Room closes after 5 minutes")}</p>
+            ) : null}
+          </div>
+        )}
 
         <div className="flex grow flex-row space-x-10">
           {/* TITLE SCREEN BUTTON */}
@@ -95,6 +182,9 @@ export default function GameDisplay({
             onClick={() => {
               game.title = true;
               game.round = 0;
+              game.is_sudden_death = false;
+              game.winner_team = null;
+              game.game_over = false;
               game.is_final_round = false;
               game.is_final_second = false;
               // @ts-expect-error: need a better way to update these values
@@ -114,6 +204,8 @@ export default function GameDisplay({
               className="grow rounded border-4 bg-secondary-300 p-10 text-2xl text-foreground"
               onClick={() => {
                 game.title = false;
+                game.is_sudden_death = false;
+                game.game_over = false;
                 game.is_final_round = true;
                 game.is_final_second = false;
                 // @ts-expect-error: need a better way to update these values
@@ -137,6 +229,7 @@ export default function GameDisplay({
             onChange={(e) => {
               game.round = parseInt(e.target.value);
               game.is_final_round = false;
+              game.is_sudden_death = false;
               game.is_final_second = false;
               game.teams[0].mistakes = 0;
               game.teams[1].mistakes = 0;
@@ -166,6 +259,7 @@ export default function GameDisplay({
             onClick={() => {
               game.title = false;
               game.is_final_round = false;
+              game.is_sudden_death = false;
               game.is_final_second = false;
               game.round = 0;
               // @ts-expect-error: need a better way to update these values
@@ -190,6 +284,7 @@ export default function GameDisplay({
             onClick={() => {
               game.title = false;
               game.is_final_round = false;
+              game.is_sudden_death = false;
               game.is_final_second = false;
               game.teams[0].mistakes = 0;
               game.teams[1].mistakes = 0;

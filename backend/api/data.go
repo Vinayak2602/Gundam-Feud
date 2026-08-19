@@ -15,6 +15,9 @@ func mergeGame(game *game, newData *game) {
 	game.IsFinalRound = newData.IsFinalRound
 	game.IsFinalSecond = newData.IsFinalSecond
 	game.PointTracker = newData.PointTracker
+	game.IsSuddenDeath = newData.IsSuddenDeath
+	game.WinnerTeam = newData.WinnerTeam
+	game.GameOver = newData.GameOver
 	game.Settings = newData.Settings
 	game.Teams = newData.Teams
 	game.Title = newData.Title
@@ -57,6 +60,53 @@ func NewData(client *Client, event *Event) GameError {
 	}
 	room.Hub.broadcast <- message
 	s.writeRoom(event.Room, room)
+	return GameError{}
+}
+
+func EndGame(client *Client, event *Event) GameError {
+	s := store
+	room, storeError := s.getRoom(client, event.Room)
+	if storeError.code != "" {
+		return storeError
+	}
+
+	if event.Data != nil {
+		newData := game{}
+		rawData, err := json.Marshal(event.Data)
+		if err != nil {
+			return GameError{code: SERVER_ERROR, message: fmt.Sprint(err)}
+		}
+		err = json.Unmarshal(rawData, &newData)
+		if err != nil {
+			return GameError{code: SERVER_ERROR, message: fmt.Sprint(err)}
+		}
+		mergeGame(room.Game, &newData)
+	}
+
+	room.Game.GameOver = true
+	message, err := NewSendData(room.Game)
+	if err != nil {
+		return GameError{code: SERVER_ERROR, message: fmt.Sprint(err)}
+	}
+	room.Hub.broadcast <- message
+	s.writeRoom(event.Room, room)
+
+	go func(roomCode string, hub *Hub) {
+		time.Sleep(5 * time.Minute)
+		latestRoom, storeError := store.getRoom(nil, roomCode)
+		if storeError.code != "" || latestRoom.Game == nil || !latestRoom.Game.GameOver {
+			return
+		}
+		message, err := NewSendQuit()
+		if err == nil && hub.broadcast != nil {
+			hub.broadcast <- message
+		}
+		if hub.stop != nil {
+			hub.stop <- true
+		}
+		store.deleteRoom(roomCode)
+	}(room.Game.Room, room.Hub)
+
 	return GameError{}
 }
 

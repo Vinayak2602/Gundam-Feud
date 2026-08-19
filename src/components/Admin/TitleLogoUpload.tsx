@@ -167,6 +167,17 @@ export default function TitleLogoUpload({
   setImageUploaded,
   imageUploaded,
 }: TitleLogoUploadProps) {
+  const { t } = useTranslation();
+
+  if (process.env.NEXT_PUBLIC_ENABLE_CUSTOM_ASSETS !== "true") {
+    return (
+      <div className="flex flex-col justify-center rounded border-2 border-secondary-500 p-4 text-foreground">
+        <p className="text-lg font-semibold">{t("Custom assets later")}</p>
+        <p className="text-sm text-secondary-900">{t("Logo upload is disabled for this version")}</p>
+      </div>
+    );
+  }
+
   return imageUploaded === null ? (
     <BeforeUpload send={send} room={room} game={game} setGame={setGame} setImageUploaded={setImageUploaded} />
   ) : (

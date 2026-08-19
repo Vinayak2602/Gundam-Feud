@@ -32,7 +32,7 @@ export default function BuzzersPage() {
   }
 
   useEffect(() => {
-    ws.current = new WebSocket(getWebSocketUrl());
+    ws.current = new WebSocket(getWebSocketUrl("/api/ws", { room: roomCode }));
     ws.current.onopen = function () {
       console.log("game connected to server");
       const session = cookieCutter.get("session");

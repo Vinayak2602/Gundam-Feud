@@ -38,6 +38,11 @@ export const GameContext = createContext<GameContextType>({
   setHostPassword: () => {},
 });
 
+type WsConnectOptions = {
+  mode?: "host";
+  room?: string;
+};
+
 export default function Home() {
   // TODO if I am just using GameContext do I just set these as static
   // variables for the downstream components?
@@ -73,8 +78,8 @@ export default function Home() {
     }
   }
 
-  function startWsConnection() {
-    ws.current = new WebSocket(getWebSocketUrl());
+  function startWsConnection(options: WsConnectOptions = {}) {
+    ws.current = new WebSocket(getWebSocketUrl("/api/ws", options));
     ws.current.onopen = function () {
       console.debug("game connected to server", ws.current);
       if (ws.current) {
@@ -191,11 +196,11 @@ export default function Home() {
    * doesn't stay idleing while a player is sitting
    * on the main page
    */
-  function send(message: string) {
+  function send(message: string, options: WsConnectOptions = {}) {
     console.debug("send", ws);
     if (!ws.current || ws.current.readyState !== WebSocket.OPEN) {
       console.debug("connecting to server... new connection");
-      startWsConnection();
+      startWsConnection(options);
       waitForSocketConnection(ws.current, function () {
         if (ws.current) {
           ws.current.send(message);
@@ -218,7 +223,8 @@ export default function Home() {
     const session = cookieCutter.get("session");
     console.debug("user session", session);
     if (session != "" && session != null) {
-      send(JSON.stringify({ action: "get_back_in", session: session }));
+      const [sessionRoom] = session.split(":");
+      send(JSON.stringify({ action: "get_back_in", session: session }), { room: sessionRoom });
     }
   }, []);
 
@@ -226,7 +232,8 @@ export default function Home() {
     send(
       JSON.stringify({
         action: "host_room",
-      })
+      }),
+      { mode: "host" }
     );
   }
 
@@ -241,12 +248,14 @@ export default function Home() {
     if (roomCodeInput && roomCodeInput.value.length === 4) {
       if (playerNameInput && playerNameInput.value.length > 0) {
         console.debug(`roomcode: ${roomCodeInput.value}, playername ${playerNameInput.value}`);
+        const room = roomCodeInput.value.toUpperCase();
         send(
           JSON.stringify({
             action: "join_room",
-            room: roomCodeInput.value.toUpperCase(),
+            room,
             name: playerNameInput.value,
-          })
+          }),
+          { room }
         );
       } else {
         toast.error(t(ERROR_CODES.MISSING_INPUT, { message: t("name") }));
@@ -316,11 +325,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{t("Friendly Feud")}</title>
-        <meta name="author" content="Joshua Cold" />
+        <title>{t("Gundam Feud")}</title>
+        <meta name="author" content="Vinayak2602" />
         <meta
           name="description"
-          content="Free to play open source friendly feud game. Host your own custom created family feud games with built in online buzzers, timers and admin controls. Visit https://github.com/joshzcold/Cold-Friendly-Feud to check out the source code and contribute."
+          content="Gundam, Gunpla, and mecha model kit party feud game with room codes, mobile buzzers, timers, and host controls."
         />
       </Head>
       <main>

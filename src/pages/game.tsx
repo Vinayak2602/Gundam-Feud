@@ -86,10 +86,12 @@ export default function GamePage() {
   }, [game?.settings?.theme]);
 
   useEffect(() => {
-    ws.current = new WebSocket(getWebSocketUrl());
+    const session = cookieCutter.get("session");
+    const [sessionRoom] = session?.split(":") ?? [];
+
+    ws.current = new WebSocket(getWebSocketUrl("/api/ws", { room: sessionRoom }));
     ws.current.onopen = function () {
       console.log("game connected to server");
-      const session = cookieCutter.get("session");
       console.debug(session);
       if (session != null && ws.current) {
         console.debug("found user session", session);
@@ -331,7 +333,16 @@ export default function GamePage() {
     const activeTheme = game?.settings?.theme ?? "default";
 
     let gameSession;
-    if (game.title) {
+    if (game.game_over && game.winner_team != null) {
+      const winner = game.teams[game.winner_team];
+      gameSession = (
+        <div className="flex h-screen w-screen flex-col items-center justify-center gap-8 text-center text-foreground">
+          <h1 className="text-8xl font-black uppercase">{t("Winner")}</h1>
+          <p className="text-6xl font-bold">{winner.name}</p>
+          <p className="text-3xl">{t("Room closes after 5 minutes")}</p>
+        </div>
+      );
+    } else if (game.title) {
       gameSession = <TitlePage game={game} />;
     } else if (game.is_final_round) {
       gameSession = (

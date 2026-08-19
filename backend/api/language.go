@@ -9,7 +9,7 @@ import (
 )
 
 func ChangeLanguage(client *Client, event *Event) GameError {
-	gamePath := filepath.Join("games", fmt.Sprint(event.Data), "**/*.json")
+	gamePath := filepath.Join("games", fmt.Sprint(event.Data), "themed", "gundam.json")
 	gameList, err := filepath.Glob(gamePath)
 	if err != nil {
 		return GameError{code: SERVER_ERROR, message: fmt.Sprint(err)}

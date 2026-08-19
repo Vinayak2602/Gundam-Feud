@@ -1,0 +1,20 @@
+name = "gundam-feud-realtime"
+account_id = "455526e1071cea28fc356e63d3f4b3f4"
+main = "worker/realtime.ts"
+compatibility_date = "2026-08-19"
+
+[[routes]]
+pattern = "gunfeud.scurfer.dev/api/ws*"
+zone_name = "scurfer.dev"
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "RoomObject"
+
+[[durable_objects.bindings]]
+name = "ROOM_DIRECTORY"
+class_name = "RoomDirectory"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RoomObject", "RoomDirectory"]

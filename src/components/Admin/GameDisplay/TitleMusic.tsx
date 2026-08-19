@@ -61,59 +61,71 @@ export default function TitleMusic({ send, room, game, setGame, isPlaying, setIs
       >
         {t("Pause")}
       </button>
-      <button
-        id="uploadTitleMusicButton"
-        className="rounded border-2 bg-secondary-300 px-4 py-2 text-foreground"
-        onClick={() => uploadInputRef.current?.click()}
-      >
-        {t("Upload Music")}
-      </button>
-      <input
-        ref={uploadInputRef}
-        className="hidden"
-        type="file"
-        accept=".mp3,audio/mpeg"
-        id="titleMusicUpload"
-        onChange={() => {
-          const file = uploadInputRef.current?.files?.[0];
-          if (file) {
-            const maxSizeMB = Number(process.env.NEXT_PUBLIC_MAX_AUDIO_UPLOAD_SIZE_MB) || 2;
-            if (file.size > maxSizeMB * 1024 * 1024) {
-              toast.error(t("Audio too large, the limit is {{message}}", { message: "2MB" }));
-              return;
-            }
+      {process.env.NEXT_PUBLIC_ENABLE_CUSTOM_ASSETS === "true" ? (
+        <>
+          <button
+            id="uploadTitleMusicButton"
+            className="rounded border-2 bg-secondary-300 px-4 py-2 text-foreground"
+            onClick={() => uploadInputRef.current?.click()}
+          >
+            {t("Upload Music")}
+          </button>
+          <input
+            ref={uploadInputRef}
+            className="hidden"
+            type="file"
+            accept=".mp3,audio/mpeg"
+            id="titleMusicUpload"
+            onChange={() => {
+              const file = uploadInputRef.current?.files?.[0];
+              if (file) {
+                const maxSizeMB = Number(process.env.NEXT_PUBLIC_MAX_AUDIO_UPLOAD_SIZE_MB) || 2;
+                if (file.size > maxSizeMB * 1024 * 1024) {
+                  toast.error(t("Audio too large, the limit is {{message}}", { message: "2MB" }));
+                  return;
+                }
 
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-              if (!evt.target || !evt.target.result) return;
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                  if (!evt.target || !evt.target.result) return;
 
-              const rawData = evt.target.result as ArrayBuffer;
-              if (!isMp3File(file, rawData)) {
-                toast.error(t(ERROR_CODES.UNKNOWN_FILE_TYPE));
-                return;
+                  const rawData = evt.target.result as ArrayBuffer;
+                  if (!isMp3File(file, rawData)) {
+                    toast.error(t(ERROR_CODES.UNKNOWN_FILE_TYPE));
+                    return;
+                  }
+
+                  const bufferData = Buffer.from(rawData).toString("base64");
+                  send({
+                    action: WSAction.TITLE_MUSIC_UPLOAD,
+                    audioData: bufferData,
+                    mimetype: "mp3",
+                  });
+                  const updatedGame = {
+                    ...game,
+                    settings: {
+                      ...game.settings,
+                      title_music_url: `/api/rooms/${room}/title-music`,
+                    },
+                  };
+                  setGame(updatedGame);
+                  send({ action: WSAction.DATA, data: updatedGame });
+                };
+                reader.readAsArrayBuffer(file);
               }
-
-              const bufferData = Buffer.from(rawData).toString("base64");
-              send({
-                action: WSAction.TITLE_MUSIC_UPLOAD,
-                audioData: bufferData,
-                mimetype: "mp3",
-              });
-              const updatedGame = {
-                ...game,
-                settings: {
-                  ...game.settings,
-                  title_music_url: `/api/rooms/${room}/title-music`,
-                },
-              };
-              setGame(updatedGame);
-              send({ action: WSAction.DATA, data: updatedGame });
-            };
-            reader.readAsArrayBuffer(file);
-          }
-          if (uploadInputRef.current) uploadInputRef.current.value = "";
-        }}
-      />
+              if (uploadInputRef.current) uploadInputRef.current.value = "";
+            }}
+          />
+        </>
+      ) : (
+        <button
+          id="titleMusicUploadDisabledButton"
+          className="rounded border-2 bg-secondary-300 px-4 py-2 text-foreground"
+          disabled
+        >
+          {t("Custom assets later")}
+        </button>
+      )}
     </div>
   );
 }
