@@ -31,7 +31,7 @@ export default function Footer() {
       <hr />
       <div className="flex flex-row items-center justify-evenly py-3">
         <LinkItem
-          href="https://github.com/joshzcold/Friendly-Feud"
+          href="https://github.com/Vinayak2602/Gundam-Feud"
           label="source code"
           external
           icon={
@@ -41,8 +41,8 @@ export default function Footer() {
             </svg>
           }
         />
-        <LinkItem href="mailto:joshzcold@gmail.com" label="email" icon={<Mail color="gray" />} />
-        <LinkItem href="https://liberapay.com/joshuaCold" label="donate" external icon={<Coffee color="gray" />} />
+        <LinkItem href="mailto:gvinayak1111@gmail.com" label="email" icon={<Mail color="gray" />} />
+        <LinkItem href="https://coffee4.scurfer.dev/" label="donate" external icon={<Coffee color="gray" />} />
       </div>
       <Version />
     </div>
